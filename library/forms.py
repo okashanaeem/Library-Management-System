@@ -26,7 +26,7 @@ class BookIssueForm(forms.ModelForm):
         model = BookIssue
         fields = ['book', 'member', 'due_date']
         widgets = {
-            'book': forms.Select(attrs={'class': 'form-control'}),
-            'member': forms.Select(attrs={'class': 'form-control'}),
+            'book': forms.Select(attrs={'class': 'form-select'}),
+            'member': forms.Select(attrs={'class': 'form-select'}),
             'due_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }

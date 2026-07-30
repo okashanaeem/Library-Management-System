@@ -10,11 +10,14 @@ def dashboard(request):
     total_members = Member.objects.count()
     active_issues = BookIssue.objects.filter(returned=False).count()
     overdue_issues = BookIssue.objects.filter(returned=False, due_date__lt=timezone.now().date()).count()
+    recent_issues = BookIssue.objects.all().order_by('-issue_date')[:5]
     context = {
         'total_books': total_books,
         'total_members': total_members,
         'active_issues': active_issues,
         'overdue_issues': overdue_issues,
+        'recent_issues': recent_issues,
+        'today': timezone.now().date(),
     }
     return render(request, 'library/dashboard.html', context)
 
@@ -59,8 +62,11 @@ def book_delete(request, pk):
 
 
 def member_list(request):
+    query = request.GET.get('q', '')
     members = Member.objects.all()
-    return render(request, 'library/member_list.html', {'members': members})
+    if query:
+        members = members.filter(Q(name__icontains=query) | Q(email__icontains=query))
+    return render(request, 'library/member_list.html', {'members': members, 'query': query})
 
 
 def member_add(request):
